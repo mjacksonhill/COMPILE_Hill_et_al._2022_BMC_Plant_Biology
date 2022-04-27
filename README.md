@@ -14,6 +14,7 @@ Supplemental Dataset 3 is concerned with the re-analysis of GWAS results using d
 Each supplemental dataset contains a WORKFLOW.txt file detailing the general usage of the scripts within, and SD2 contains an additional STUDY_DB_PREP.txt file detailing the origins of the files used in this study.
 
 Each script within these datasets contains a section at the top identifying:
-	1. General purpose of the script
-	2. Folder architecture required to execute the script, including prerequisite, input, and output files
-	3. Information on how one might begin to customize the script for use with new datasets
+
+1. General purpose of the script
+2. Folder architecture required to execute the script, including prerequisite, input, and output files
+3. Information on how one might begin to customize the script for use with new datasets
