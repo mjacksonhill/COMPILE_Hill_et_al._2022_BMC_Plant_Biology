@@ -1,5 +1,5 @@
 # ComPile
-GWAS COMputational PIpeLinE built on GAPIT
+GWAS COMputational PIpeLinE
 
 The goal of providing these Supplemental Datasets is to:
 
