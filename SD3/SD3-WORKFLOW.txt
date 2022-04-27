@@ -1,0 +1,10 @@
+This dataset contains tools for reanalysis of COMPILE outputs. All scripts should iterate across input files placed in their folders.
+Python is required to execute SD3-S3 and SD3-S4.
+Instructions for downloading and extracting the large core files SD3 are included in /PLOTTER/download.txt and /REANNOTATE/download.txt
+
+The REANNOTATE script SD3-S1.pl reanalyzes GAPIT results files so that the statistical analysis does not have to be re-executed in order to re-define significance thresholds.
+the REANNOTATE script SD3-S2.pl generates Manhattan plots with vertical lines overlaid at precise gene and/or marker locations from GAPIT results files.
+
+The PLOTTER scripts SD3-S3.pl and SD3-S4.pl both produce plots of local genome architecture (gene position/length/orientation)
+	SD3-S3: Plots overlaid with Manhattan plots for both marker sets used in FOCUS
+	SD3-S4: Generic plots (for maize genome architecture in our case) for plotting the area local to specified genes

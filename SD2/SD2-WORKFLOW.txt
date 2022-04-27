@@ -1,0 +1,109 @@
+The file SD2_STUDY_DB_PREP.txt contains great detail on how we prepared the files included with these versions of COMPILE.
+See software prerequisite information at the bottom of this file.
+
+Each folder within SD2 is set up to execute COMPILE GWAS analysis in one of three flavors detailed in the manuscript.
+1. SD2-S1: GWAS for the Goodman 282 panel
+2. SD2-S2: GWAS for the NCRPIS panel
+3. SD2-S3: "FOCUS" GWAS on selected regions of the Goodman 282 panel in both low and high resolution
+
+The structure of SD2-S1 and SD2-S2 allows simple replacement of:
+	1. Species to analyze (Maize in these studies)
+	2. Species for BLAST comparison of identified candidate genes (Arabidopsis and Rice in these studies)
+	
+The following major files are needed to adapt COMPILE for new species:
+	1. Genotype marker data for the target species in VCF or HapMap format
+	2. A list of target species gene information in .gff3 format
+	3. Proteome data for the target species in .fasta format
+	4. Proteome data for desired comparison species in .fasta format
+	
+By use of the scripts within SD1, these files are used to create the following files used directly by COMPILE:
+	1. Genotype marker data in GAPIT numerical format, one file per chromosome (see scripts SD1-S2 and SD1-S3 to produce these files from HapMap or VCF files)
+	2. Kinship matrices for each chromosome of the target species (see scripts SD1-S4 to produce these files from numerical marker data)
+	3. A filtered .gff3 gene list for the target species (see script SD1-S5 to produce this file from a complete .gff3 file)
+	4. A list of target species gene positions (see script SD1-S6 to produce this database from the filtered .gff3 file)
+	5. An database of marker-gene proximity information (see script SD1-S7 to produce this database from the numerical marker data and gene position list)
+	6. (Optional, Manually Generated) A text file of known genes in tab-separated format, one per line:
+		Full Gene Name	Short Gene Name	Long Gene Name
+		Zm00001d000001	ppo1	polyphenol oxidase1
+	7. (Manually Generated) A one-line, tab-separated text file of target species taxa contained in the marker data: 
+		Taxon1	Taxon2	Taxon3...
+	8. Sequence similarity databases between the target species and desired comparison species (see scripts SD1-S8 and SD1-S9 to generate these databases via BLAST from target and comparison proteome .fasta files)
+
+By replacing these files within the structure of the COMPILE folder and making several edits to the SD2 scripts (detailed within each script), COMPILE will execute using the desired target and comparison species.
+
+Prerequisites:
+COMPILE requires R, Perl (we recommend Strawberry Perl), and pandoc. The R tool GAPIT and all prerequisite packages must also be installed.
+Additional Perl modules not included in given  may also be required.
+Instructions for downloading and extracting the large core files for each module are included in /COREFILES/download.txt
+
+assertthat_0.2.0
+base64enc_0.1-3
+BH_1.65.0-1
+bindr_0.1
+bindrcpp_0.2
+bitops_1.0-7
+caTools_1.18.2
+colorspace_2.0-2
+combinat_0.0-8
+crayon_1.4.1
+crosstalk_1.0.0
+curl_3.0
+data.table_1.14.0
+DBI_0.7
+dichromat_2.0-0
+digest_0.6.27
+dplyr_1.0.7
+ellipsis_0.3.2
+EMMREML_3.1
+fansi_0.5.0
+fastmap_1.1.0
+gdata_2.18.0
+generics_0.1.0
+genetics_1.3.8.1.3
+ggplot2_3.3.5
+glue_1.4.2
+gplots_3.1.1
+gtable_0.3.0
+gtools_3.9.2
+hexbin_1.27.1
+htmltools_0.5.2
+htmlwidgets_1.5.4
+httpuv_1.3.5
+httr_1.4.2
+jsonlite_1.7.2
+labeling_0.3
+lazyeval_0.2.2
+LDheatmap_1.0-4
+lifecycle_1.0.0
+magrittr_2.0.1
+manhattanly_0.3.0
+mime_0.5
+munsell_0.5.0
+mvtnorm_1.1-2
+openssl_0.9.7
+pillar_1.6.2
+pkgconfig_2.0.3
+plogr_0.1-1
+plotly_4.9.4.1
+plyr_1.8.4
+purrr_0.3.4
+R6_2.5.1
+RColorBrewer_1.1-2
+Rcpp_1.0.7
+reshape2_1.4.2
+rlang_0.4.11
+scales_1.1.1
+scatterplot3d_0.3-41
+shiny_1.0.5
+sourcetools_0.1.6
+stringi_1.1.5
+stringr_1.2.0
+tibble_3.1.4
+tidyr_1.1.3
+tidyselect_1.1.1
+utf8_1.2.2
+vctrs_0.3.8
+viridisLite_0.4.0
+withr_2.4.2
+xtable_1.8-2
+yaml_2.1.14

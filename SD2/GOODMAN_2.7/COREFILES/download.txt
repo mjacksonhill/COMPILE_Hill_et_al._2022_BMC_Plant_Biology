@@ -1,0 +1,2 @@
+download and extract within COREFILES directory (should result in /COREFILES/GENOME/)
+<link to SD2-GOODMAN_2.7.zip>

@@ -1,0 +1,2 @@
+download and extract within base directory (should result in /PLOTTER/COREFILES/)
+<link to SD3-PLOTTER.zip>

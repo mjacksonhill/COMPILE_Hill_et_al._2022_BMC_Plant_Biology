@@ -1,0 +1,2 @@
+download and extract within base directory (should result in /REANNOTATE/COREFILES/)
+<link to SD3-REANNOTATE.zip>

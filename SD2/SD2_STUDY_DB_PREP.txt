@@ -1,0 +1,93 @@
+Maize Gene List: Gramene release 62 (genome v4), ftp://ftp.gramene.org/pub/gramene/release-62/gff3/zea_mays/Zea_mays.B73_RefGen_v4.45.gff3.gz
+
+Arabidopsis Proteome: Araport 11, https://www.arabidopsis.org/download/index-auto.jsp?dir=%2Fdownload_files%2FProteins%2FAraport11_protein_lists
+
+Rice Proteome: RAP-DB https://rapdb.dna.affrc.go.jp/download/archive/irgsp1/IRGSP-1.0_protein_2019-12-17.fasta.gz
+
+Maize Proteome: ftp://ftp.gramene.org/pub/gramene/release-62/fasta/zea_mays/pep/Zea_mays.B73_RefGen_v4.pep.all.fa.gz
+	Processed to remove protein transcript IDs in unformatted DB with regex [ ^(>.*?)_.{4} | $1 ] (All isoforms will now share the same names)
+	
+Known Genes List: https://www.maizegdb.org/associated_genes?type=all&style=tab
+	Imported into Excel, deleted all columns but first 4. Left miRNA names without conversion
+	Sorted and manually converted remaining v3 names using http://www.maizeinflorescence.org/v4/convert/index.php and removed entries without v4 matches
+	Final file KnownGenes.txt has three columns- v4 id, gene symbol, and long gene name, with "[no full name]" if missing
+
+Romay Phenotype Data: https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-6-r55
+Lipka Phenotype Data: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3737168/
+
+3.2.1 Genome Data Preparation:
+
+	-Files from http://data.cyverse.org/iplant/home/shared/panzea/hapmap3/hmp321/imputed/uplifted_APGv4
+	-Included only taxa found in Romay 2853 dataset or Goodman 282 dataset. Some were run multiple times in the original dataset; I chose one to keep for each taxa with multiple
+	-Files converted to HapMap format using SD1-S2.pl (not identical to Tassel conversion mainly in how it treats the reference allele, but fine for our purposes)
+	-HapMap-converted files re-loaded in Tassel and filtered again (MAF >=0.05, <25% missing taxa) before re-exporting
+	-Converted to GAPIT numerical format using SD1-S3.pl
+	-Every 10th marker from each file used to create pared-down HapMap to generate Loiselle kinship from 10% of markers (SD1-S4.pl)
+
+2.7 Romay Data Preparation:
+
+	1. Taxa name translation
+	-Imported initial h5 file (ZeaGBSv27_publicSamples_imputedV5_AGPv4-181023.h5) into TASSEL 5; got Taxa_Info with Data>Get Taxa List. Exported as file, opened in Excel, saved as TAXA_INFO/2.7_Taxa_Info.xlsx and kept relevant columns (Taxa, DNASample, Project, GermplasmSet, Tassel4SampleName, and Population)
+	-Copied "Taxa" and "Tassel4SampleName" columns w/o header from TAXA_INFO/2.7_Taxa_Info.xlsx into Hash.txt (sorted by taxa name, then by project, so Ames282 comes before ApeKI 384-plex)
+	-Line IDs from Romay 2013 BLUPs (Romay_2013_BLUPs.txt) (http://de.iplantcollaborative.org/dl/d/2F64A6C9-D349-4488-8688-2BE47B62D445/Romay_etal_2013_GenomeBiol_phenotypes-130503.txt) translated from hash
+	-Additional taxa of full 2815-member panel are found in Supplement S1 from Romay 2013 ("Comprehensive genotyping...") stored in Romay_Translator as Romay_2013_S1.xlsx
+	-First two columns of Romay_2013_S1.xlsx copied to GENOTYPE_HANDLING/TAXA_INFO/Romay_Translator/Romay_2013.txt
+	-Used perl script to translate taxa for filtering (translator.pl) into list 2.7_Romay_Filter.txt by directly reading in base names (e.g. 33-16) from Hash.txt as a hash (ignoring subsequent repeat taxa, so only the first one encountered is stored, i.e. the Ames282, etc.)  
+		-First input is Romay_2013_BLUPs.txt
+		-Second input is Romay_2013.txt, querying first column and then second one if no match
+	-May not be a perfect solution, i.e. all the "right" lines, but it's close
+	-These 2851 lines are technically the union of the taxa included in the Romay 2013 NCRPIS panel and the Romay 2013 BLUPs. With the addition of tripsacum and B2 from the 282 panel (see below), the full 2853 lines now include the full Ames 282 panel.
+
+	2. Filtering and export
+	-Imported h5 file into TASSEL 5
+	-Filter>Filter Genotype Table Taxa>Browse>2.7_Romay_Filter.txt, then export to Filtered_Files/2.7_Romay.h5
+	
+	2. Romay Data
+	-Loaded Filtered_Files/2.7_Romay.h5
+	-Filter>Filter Genotype Table Sites [Site Min Count 2567 for 75%, Min Allele Freq 0.05)
+	-Export entire file as HapMap as input.hmp.txt
+	-"Synonymized" by removing extra taxon info: Regex [:.*?(\t|\n) | $1]. Reopened edited files in Tassel and checked synonyms with 2.7_282_Final_Names.dummy.hmp.txt. All match but W22R-r-std_CS-2909-1 to W22R-r-std. Then missing B2 and tripsacum.
+	-Merged genotype tables with 282 data, re-filtered and re-exported as input.hmp.txt
+	-Split to chromosomes ($i.hmp.txt) with Split_Hmp_ByChrom.pl
+	-Converted to GAPIT numerical format using SD1-S3.pl
+	-Generated Loiselle kinships from HapMap files using SD1-S4.pl
+	
+2.7 Goodman Data Preparation:
+
+	Synonymization:
+	-Imported initial h5 file (ZeaGBSv27_publicSamples_imputedV5_AGPv4-181023.h5) into TASSEL 5; got Taxa_Info with Data>Get Taxa List. Exported as file, opened in Excel, saved as TAXA_INFO/2.7_Taxa_Info.xlsx and kept relevant columns (Taxa, DNASample, Project, GermplasmSet, Tassel4SampleName, and Population)
+	-Used DNASample column to generate dummy hapmap file for synonymizing (one marker, taxa names) as 2.7_282_Final_Names.dummy.hmp.txt. Changed B2-good to B2, W22R-r-std_CS-2909-1 to W22R-r-std
+	-Exported all 282 taxa rows under project "282 Maize diversity panel" and columns Taxa, DNASample, and Tassel4SampleName to file 2.7_282_Taxa_Info.xlsx (and just first column to text file 2.7_282_Filter.txt)
+
+	1. v3 misc. Panzea SNPs (https://github.com/angelahchen/K_Chr_Manuscript/raw/master/Goodman%20diversity%20panel/4K_SNPsmdp_genotype_test1.hmp.txt)
+	-These SNPs are already in v3 format despite the HapMap saying v1 (checked against bed file in http://de.iplantcollaborative.org/dl/d/05FBF600-0D4D-484B-96F1-B3C212A83452/panzea_SNPs_20160417.zip)
+	-Imported to TASSEL 5 as HapMap after removing all spaces from file and putting back # symbol in header
+	-Exported as VCF, converted to v4 using http://ensembl.gramene.org/Zea_mays/Tools/AssemblyConverter
+	-Imported back into Tassel, exported as HapMap (4k.hmp.txt) and removed non-chromosome markers in text editor
+	-Imported in Tassel (sorting positions) and synonymized using 2.7_282_Final_Names.dummy.hmp.txt
+
+	2. v3 50k SNPs (https://de.cyverse.org/dl/d/E4CB9C2B-A3A0-4412-9D2B-D2DFC3A06CC9/SNP55K_maize282_AGP3_20190419.hmp.txt.gz)
+	-Non-chromosome (i.e. scaffold) markers removed in text editor
+	-Imported to TASSEL 5 as HapMap
+	-Exported as VCF, then split into two files (preserving header info) to reduce file size
+	-Converted both files to v4 using http://ensembl.gramene.org/Zea_mays/Tools/AssemblyConverter
+	-Imported both files back into Tassel and union-joined, then exported as hapmap (55k.hmp.txt) and removed non-chromosome markers in text editor that were missed
+	-Imported in Tassel (sorting positions) and synonymized using 2.7_282_Final_Names.dummy.hmp.txt
+
+	3. 2.7 v3 GBS marker data: Already v4. Fully imputed data from http://data.cyverse.org/iplant/home/shared/panzea/genotypes/GBS/v27/ZeaGBSv27_publicSamples_imputedV5_AGPv4-181023.h5
+	
+	4. Processing
+	-Imported h5 file into TASSEL 5
+	-Filter>Filter Genotype Table Taxa>Browse>2.7_282_Filter.txt, then save as new temporary h5 file. Imported that h5 file
+	-Synonymized using 2.7_282_Final_Names.dummy.hmp.txt, using delimiter option with colon specified as delimiter
+	-Merged genotype tables of 4k_synonymized, 55k_synonymized, and temp_synonymized
+
+	5. Final merged file
+	-Exported to Filtered_Files/2.7_282_merged.h5
+	
+	6. Filtering (MAF 0.05; Missing Taxa 25%, or 212 taxa)
+	-Loaded 2.7_282_Merged.h5
+	-Filter>Filter Genotype Table Sites [Site Min Count, Min Allele Freq]
+	-Exported entire file as HapMap, split to 10 chromosomes using Split_Hmp_ByChrom.pl
+	-Converted to GAPIT numerical format using SD1-S3.pl
+	-Generated Loiselle kinships from HapMap files with SD1-S4.pl

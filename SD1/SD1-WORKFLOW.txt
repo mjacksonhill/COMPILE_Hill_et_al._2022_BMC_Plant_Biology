@@ -1,0 +1,29 @@
+Romay Taxa Names: https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-6-r55
+GAPIT Functions: https://zzlab.net/GAPIT/gapit_functions.txt
+NCBI BLAST+ Toolkit: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+
+To perform GWAS and results annotation using COMPILE, the following files are required:
+	Species of Interest (Species A): 
+		Marker Data in HapMap or VCF format
+		Gene name list in GFF3 format
+		Phenotype data in tab-separated text format
+		Proteome data in FASTA format
+	Comparison Species (Species B, C, D, etc.)
+		Proteome data in FASTA format
+
+(0. Convert marker data from VCF to HapMap format using SD1-S2.pl)
+		-Requires Species A marker data in VCF format
+1. Convert Species A marker data from HapMap to numerical format using SD1-S3.pl
+		-Requires Species A marker data in HapMap format
+2. Generate kinship matrices for Species A from numerical marker data using SD1-S4.pl
+		-Requires Species A marker data in numerical format (from SD1-S3.pl)
+3. Filter the GFF3 file for Species A using SD1-S5.pl
+		-Requires Species A gene name list in GFF3 format
+4. Create an atlas of near genes to markers using SD1-S6.pl and SD1-S7.pl
+		-Requires Species A marker data in numerical format (.GM.txt files only)
+		-Requires Species A filtered gene list (from SD1-S5.pl)
+5. Generate sequence similarity databases between Species A and Species B, C, D, etc. using SD1-S8.pl and SD1-S9.pl
+		-Requires Species A proteome data in FASTA format
+		-Requires Species B, C, D, etc. proteome data in FASTA format
+		-requires Species A filtered gene list (From SD1-S5.pl)
+(6. If using phenotype data for the marker sets from this study, standardize phenotype data names using SD1-S1.pl)
